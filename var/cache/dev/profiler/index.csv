@@ -12,3 +12,5 @@ e64a57,::1,GET,http://localhost/Symfony/web/app_dev.php/,1474879444,,200
 2d0ee1,::1,GET,http://localhost/Symfony/web/app_dev.php/hello-world,1474881071,,200
 39926e,::1,GET,http://localhost/Symfony/web/app_dev.php/hello-world,1474881978,,200
 8479cf,::1,GET,http://localhost/Symfony/web/app_dev.php/hello-world,1474882113,,200
+6bdd20,::1,GET,http://localhost/Symfony/web/app_dev.php/,1474884662,,200
+ff01f1,::1,GET,http://localhost/Symfony/web/app_dev.php/hello-world,1474884667,,200
