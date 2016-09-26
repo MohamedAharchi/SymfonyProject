@@ -15,8 +15,8 @@ class __TwigTemplate_ea5c50624740aa65cf5e6dc5897424b36d5f1265c01e98025ed325e18fd
 
     protected function doDisplay(array $context, array $blocks = array())
     {
-        $__internal_bc7cdd305e8a3ea542062ff846556703c4bd428f4ba15c60f09c54ade47343c9 = $this->env->getExtension("native_profiler");
-        $__internal_bc7cdd305e8a3ea542062ff846556703c4bd428f4ba15c60f09c54ade47343c9->enter($__internal_bc7cdd305e8a3ea542062ff846556703c4bd428f4ba15c60f09c54ade47343c9_prof = new Twig_Profiler_Profile($this->getTemplateName(), "template", "OCPlatformBundle:Advert:index.html.twig"));
+        $__internal_79ce98e45832508306aac81a6c1e6f9799548294284bf5e60b354ee17f23a954 = $this->env->getExtension("native_profiler");
+        $__internal_79ce98e45832508306aac81a6c1e6f9799548294284bf5e60b354ee17f23a954->enter($__internal_79ce98e45832508306aac81a6c1e6f9799548294284bf5e60b354ee17f23a954_prof = new Twig_Profiler_Profile($this->getTemplateName(), "template", "OCPlatformBundle:Advert:index.html.twig"));
 
         // line 2
         echo "
@@ -26,13 +26,18 @@ class __TwigTemplate_ea5c50624740aa65cf5e6dc5897424b36d5f1265c01e98025ed325e18fd
     <title>Bienvenue sur ma première page avec OpenClassrooms !</title>
   </head>
   <body>
-    <h1>Hello ";
+    <h1>";
         // line 9
+        echo twig_escape_filter($this->env, (isset($context["typeSalutation"]) ? $context["typeSalutation"] : $this->getContext($context, "typeSalutation")), "html", null, true);
+        echo " ";
         echo twig_escape_filter($this->env, (isset($context["nom"]) ? $context["nom"] : $this->getContext($context, "nom")), "html", null, true);
         echo " !</h1>
 
     <p>
-      Le Hello World est un grand classique en programmation.
+      Le ";
+        // line 12
+        echo twig_escape_filter($this->env, (isset($context["typeSalutation"]) ? $context["typeSalutation"] : $this->getContext($context, "typeSalutation")), "html", null, true);
+        echo " World est un grand classique en programmation.
       Il signifie énormément, car cela veut dire que vous avez
       réussi à exécuter le programme pour accomplir une tâche simple :
       afficher ce hello world !
@@ -41,7 +46,7 @@ class __TwigTemplate_ea5c50624740aa65cf5e6dc5897424b36d5f1265c01e98025ed325e18fd
 </html>
 ";
         
-        $__internal_bc7cdd305e8a3ea542062ff846556703c4bd428f4ba15c60f09c54ade47343c9->leave($__internal_bc7cdd305e8a3ea542062ff846556703c4bd428f4ba15c60f09c54ade47343c9_prof);
+        $__internal_79ce98e45832508306aac81a6c1e6f9799548294284bf5e60b354ee17f23a954->leave($__internal_79ce98e45832508306aac81a6c1e6f9799548294284bf5e60b354ee17f23a954_prof);
 
     }
 
@@ -57,7 +62,7 @@ class __TwigTemplate_ea5c50624740aa65cf5e6dc5897424b36d5f1265c01e98025ed325e18fd
 
     public function getDebugInfo()
     {
-        return array (  31 => 9,  22 => 2,);
+        return array (  39 => 12,  31 => 9,  22 => 2,);
     }
 }
 /* {# src/OC/PlatformBundle/Resources/views/Advert/index.html.twig #}*/
@@ -68,10 +73,10 @@ class __TwigTemplate_ea5c50624740aa65cf5e6dc5897424b36d5f1265c01e98025ed325e18fd
 /*     <title>Bienvenue sur ma première page avec OpenClassrooms !</title>*/
 /*   </head>*/
 /*   <body>*/
-/*     <h1>Hello {{ nom }} !</h1>*/
+/*     <h1>{{ typeSalutation }} {{ nom }} !</h1>*/
 /* */
 /*     <p>*/
-/*       Le Hello World est un grand classique en programmation.*/
+/*       Le {{ typeSalutation }} World est un grand classique en programmation.*/
 /*       Il signifie énormément, car cela veut dire que vous avez*/
 /*       réussi à exécuter le programme pour accomplir une tâche simple :*/
 /*       afficher ce hello world !*/
