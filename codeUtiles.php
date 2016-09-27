@@ -143,3 +143,8 @@ Pour connaître les variables de la session courante, allez dans le Profiler (la
 puis descendez tout en bas au paragraphe « Session Attributes ». 
 Très utile pour savoir si vous avez bien les variables de session que vous attendez. 
 */
+
+
+/************** LES COMMANDES TWIG ***************/
+// Documentation des filtres TWIG disponible au lien suivant : http://twig.sensiolabs.org/doc/filters/index.html
+// Documentation des tests à TWIG disponible au lien suivant : http://twig.sensiolabs.org/doc/tests/index.html
