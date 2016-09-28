@@ -144,7 +144,25 @@ puis descendez tout en bas au paragraphe « Session Attributes ».
 Très utile pour savoir si vous avez bien les variables de session que vous attendez. 
 */
 
+/************* LES COMMANDES EXCEPTIONS ******************/
+public function indexAction($page)
+{
+    // On ne sait pas combien de pages il y a
+    // Mais on sait qu'une page doit être supérieure ou égale à 1
+    if ($page < 1) {
+      // On déclenche une exception NotFoundHttpException, cela va afficher
+      // une page d'erreur 404 (qu'on pourra personnaliser plus tard d'ailleurs)
+      throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
+    }
+
+    // Ici, on récupérera la liste des annonces, puis on la passera au template
+
+    // Mais pour l'instant, on ne fait qu'appeler le template
+    return $this->render('OCPlatformBundle:Advert:index.html.twig');
+}
+/************* FIN DES COMMANDES EXCEPTIONS ******************/
 
 /************** LES COMMANDES TWIG ***************/
+// Documentation général de  TWIG disponible au lien suivant : http://twig.sensiolabs.org/documentation
 // Documentation des filtres TWIG disponible au lien suivant : http://twig.sensiolabs.org/doc/filters/index.html
 // Documentation des tests à TWIG disponible au lien suivant : http://twig.sensiolabs.org/doc/tests/index.html

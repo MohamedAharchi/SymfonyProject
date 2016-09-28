@@ -34,6 +34,7 @@
     <parameter key="mailer_user">null</parameter>
     <parameter key="mailer_password">null</parameter>
     <parameter key="secret">2743c7f78427f706273f4b7a9c7620500717b1f2</parameter>
+    <parameter key="app_webmaster">Mohamed AHARCHI</parameter>
     <parameter key="locale">en</parameter>
     <parameter key="fragment.renderer.hinclude.global_template">null</parameter>
     <parameter key="fragment.path">/_fragment</parameter>
@@ -488,7 +489,7 @@
                   <tag name="cache.pool"/>
                   <argument>tjTDwchanw</argument>
                   <argument>0</argument>
-                  <argument>lX5JMbCjpf4NfqgPDjQ8MQ</argument>
+                  <argument>-gAUcSvHzWZIdceppYkk+w</argument>
                   <argument>C:/wamp/www/Symfony/var/cache/dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -501,7 +502,7 @@
                   <tag name="cache.pool"/>
                   <argument>+EnS6rxXsi</argument>
                   <argument>0</argument>
-                  <argument>lX5JMbCjpf4NfqgPDjQ8MQ</argument>
+                  <argument>-gAUcSvHzWZIdceppYkk+w</argument>
                   <argument>C:/wamp/www/Symfony/var/cache/dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -833,7 +834,7 @@
       <tag name="cache.pool"/>
       <argument>8InIoS-L0U</argument>
       <argument>0</argument>
-      <argument>lX5JMbCjpf4NfqgPDjQ8MQ</argument>
+      <argument>-gAUcSvHzWZIdceppYkk+w</argument>
       <argument>C:/wamp/www/Symfony/var/cache/dev/pools</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -1569,7 +1570,7 @@
       <argument type="collection">
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-            <argument>57ea42db02f636.21431377</argument>
+            <argument>57eb85857af015.63622247</argument>
           </service>
         </argument>
       </argument>
@@ -1703,7 +1704,7 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
             <argument type="service" id="security.token_storage"/>
-            <argument>57ea42db02f636.21431377</argument>
+            <argument>57eb85857af015.63622247</argument>
             <argument type="service" id="monolog.logger.security" on-invalid="null"/>
             <argument type="service" id="security.authentication.manager"/>
           </service>
@@ -1928,6 +1929,10 @@
             </call>
           </service>
         </argument>
+      </call>
+      <call method="addGlobal">
+        <argument>webmaster</argument>
+        <argument>Mohamed AHARCHI</argument>
       </call>
       <configurator method="configure">
         <service class="Symfony\Bundle\TwigBundle\DependencyInjection\Configurator\EnvironmentConfigurator" public="false">
