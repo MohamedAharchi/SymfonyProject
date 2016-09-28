@@ -166,3 +166,9 @@ public function indexAction($page)
 // Documentation général de  TWIG disponible au lien suivant : http://twig.sensiolabs.org/documentation
 // Documentation des filtres TWIG disponible au lien suivant : http://twig.sensiolabs.org/doc/filters/index.html
 // Documentation des tests à TWIG disponible au lien suivant : http://twig.sensiolabs.org/doc/tests/index.html
+
+
+/************* COMPOSER ***************/
+// Lien direct : https://getcomposer.org/
+// Utilisation de Composer sur notre projet : https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony/installer-un-bundle-grace-a-composer-2 
+/*********** FIN COMPOSER *************/
