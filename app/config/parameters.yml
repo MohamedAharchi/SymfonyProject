@@ -10,3 +10,4 @@ parameters:
     mailer_user: null
     mailer_password: null
     secret: 2743c7f78427f706273f4b7a9c7620500717b1f2
+    app_webmaster: Mohamed Aharchi

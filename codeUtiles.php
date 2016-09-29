@@ -172,3 +172,12 @@ public function indexAction($page)
 // Lien direct : https://getcomposer.org/
 // Utilisation de Composer sur notre projet : https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony/installer-un-bundle-grace-a-composer-2 
 /*********** FIN COMPOSER *************/
+
+/************ LES SERVICES ***********/
+// Liste des services disponible : php bin/console debug:container
+/* Utiliser un service dans le controlleur */
+// Sur le cas des contrôleurs, le container est disponible dans l'attribut $container
+public function indexAction()
+{
+    $mailer = $this->container->get('mailer');
+}
