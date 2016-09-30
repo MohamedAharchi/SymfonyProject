@@ -27,6 +27,20 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
         $context = $this->context;
         $request = $this->request;
 
+        // oc_core_home
+        if (rtrim($pathinfo, '/') === '') {
+            if (substr($pathinfo, -1) !== '/') {
+                return $this->redirect($pathinfo.'/', 'oc_core_home');
+            }
+
+            return array (  '_controller' => 'OC\\CoreBundle\\Controller\\CoreController::indexAction',  '_route' => 'oc_core_home',);
+        }
+
+        // oc_core_contact
+        if ($pathinfo === '/contact') {
+            return array (  '_controller' => 'OC\\CoreBundle\\Controller\\CoreController::contactAction',  '_route' => 'oc_core_contact',);
+        }
+
         if (0 === strpos($pathinfo, '/platform')) {
             // oc_platform_home
             if (preg_match('#^/platform(?:/(?P<page>\\d*))?$#s', $pathinfo, $matches)) {

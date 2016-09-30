@@ -181,3 +181,10 @@ public function indexAction()
 {
     $mailer = $this->container->get('mailer');
 }
+
+
+/************** ORM (Object Relation Mapping) *************/
+// Documentation officiel sur le lien suivant : http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/basic-mapping.html
+// Autre doc : http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html
+// Documentation Doctrine pour gérer plusieurs base de données dans un seul projet : https://symfony.com/fr/doc/current/cookbook/doctrine/multiple_entity_managers.html
+// Documentation officiel de l'Entity Manager : http://www.doctrine-project.org/api/orm/2.5/class-Doctrine.ORM.EntityManager.html
