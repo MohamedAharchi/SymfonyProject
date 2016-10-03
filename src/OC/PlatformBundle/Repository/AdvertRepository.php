@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class AdvertRepository extends EntityRepository
 {
+	/********* QUERY BUILDER *********/
 	public function myFindAll()
 	{
 		// Méthode 1 : en passant par l'EntityManager
@@ -38,5 +39,89 @@ class AdvertRepository extends EntityRepository
 
 		// Méthode simplifiée
 		return $this->createQueryBuilder()->getQuery()->getResult();
+	}
+
+	public function myFindOne($id)
+	{
+		$qb = $this->createQueryBuilder('a');
+
+		$qb->where('a.id = :id')->setParameter('id', $id);
+
+		return $qb->getQuery()->getResult();
+	}
+
+	public function findByAuthorAndDate($author, $year)
+	{
+		$qb = $this->createQueryBuilder('a');
+
+		$qb->where('a.author = :author')
+			  ->setParameter('author', $author)
+		   ->andWhere('a.date < :year')
+		   	  ->setParameter('year', $year)
+		   ->orderBy('a.date', 'DESC');
+
+		return $qb->getQuery()->getResult();
+	}
+
+	public function whereCurrentYear(QueryBuilder $qb)
+	{
+		$qb
+		  ->andWhere('a.date BETWEEN :start AND :end')
+		  ->setParameter('start', new \Datetime(date('Y').'-01-01'))
+		  ->setParameter('end', new \Datetime(date('Y').'-12-31'));
+	}
+
+	public function myFind()
+	{
+		$qb = $this->createQueryBuilder('a');
+
+		$qb
+		  ->where('a.author = :author')
+		  ->setParameter('author', 'Marine');
+
+		$this->whereCurrentYear($qb);
+
+		$qb->orderBy('a.date', 'DESC');
+
+		return $qb->getQuery()->getResult();
+	}
+
+	/* Les jointures avec le QueryBuilder */
+	public function getAdvertWithApplications()
+	{
+		$qb = $this->createQueryBuilder('a')->leftJoin('a.applications', 'app')->addSelect('app');
+
+		return $qb->getQuery()->getResult();
+	}
+
+
+	public function getAdvertWithCategories(array $categoryNames)
+	{
+
+		/*$qb = $this
+		  ->createQueryBuilder('a')
+		  ->innerJoin('a.categories', 'cat')
+		  ->addSelect('cat')
+		  ->where("cat.name IN(:categoryNames)")
+		  ->setParameter('categoryNames', array_values($categoryNames));*/
+
+		/* "Correction" */
+		$qb = $this
+		  ->createQueryBuilder('a')
+		  ->innerJoin('a.categories', 'cat')
+		  ->addSelect('cat')
+		  ->where($qb->expr()->in('cat.name', $categoryNames));
+
+		return $qb->getQuery()->getResult();
+	}
+
+
+	/***** DQL ******/
+	public function myFindDQL($id)
+	{
+		$query = $this->_em->createQuery('SELECT a from Advert a where a.id = :id')
+		$query->setParameter('id', $id);
+
+		return $query->getSingleResult();
 	}
 }

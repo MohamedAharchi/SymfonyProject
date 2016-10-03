@@ -188,6 +188,7 @@ public function indexAction()
 // Autre doc : http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html
 // Documentation Doctrine pour gérer plusieurs base de données dans un seul projet : https://symfony.com/fr/doc/current/cookbook/doctrine/multiple_entity_managers.html
 // Documentation officiel de l'Entity Manager : http://www.doctrine-project.org/api/orm/2.5/class-Doctrine.ORM.EntityManager.html
+// Documentation Bundle Symfony Doctrine Fixtures Bundle : https://symfony.com/fr/doc/current/bundles/DoctrineFixturesBundle/index.html
 
 // Pour récupérer une donnée (2 méthodes)
 /*** 1ère méthode ***/
@@ -228,4 +229,8 @@ public function editImageAction($advertId)
 // Documentation utilisation des relations : http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/working-with-associations.html
 
 
-// Documentation Bundle Symfony Doctrine Fixtures Bundle : https://symfony.com/fr/doc/current/bundles/DoctrineFixturesBundle/index.html
+/********** QUERY BUILDER *************/
+// Documentation officielle : http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/query-builder.html
+
+/********* DQL (Doctrine Query Language) ***********/
+// Documentation officielle : http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/dql-doctrine-query-language.html
