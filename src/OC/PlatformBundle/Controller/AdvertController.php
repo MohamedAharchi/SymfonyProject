@@ -6,6 +6,9 @@ namespace OC\PlatformBundle\Controller;
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Entity\Image;
 use OC\PlatformBundle\Entity\Application;
+use OC\PlatformBundle\Entity\Category;
+use OC\PlatformBundle\Entity\Skill;
+use OC\PlatformBundle\Entity\AdvertSkill;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -79,18 +82,18 @@ class AdvertController extends Controller
 
     public function addAction(Request $request)
     {        
-        // Création de l'image
-        $image = new Image();
-        $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
-        $image->setAlt('Jobe de rêve');
-
-        // Création de l'entité
+        // Création de l'entité Advert
         $advert = new Advert();
         $advert->setTitle('Recherche développpeur Symfony');
         $advert->setAuthor('Alexandre');
         $advert->setContent('Nous recherchons un développpeur Symfony débutant sur Lyon. Blabla…');
         // On peut ne pas définir ni la date ni la publication
         // car ces attributs sont définis automatiquement dans le constructeur
+
+        // Création de l'entité Image
+        $image = new Image();
+        $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
+        $image->setAlt('Jobe de rêve');
 
         // On lie l'image à l'annonce
         $advert->setImage($image);
@@ -115,7 +118,7 @@ class AdvertController extends Controller
         // On récupère toutes les compétences possibles
         $listSkills = $em->getRepository('OCPlatformBundle:Skill')->findAll();
 
-        foreach ($list as $skill) {
+        foreach ($listSkills as $skill) {
           $advertSkill = new AdvertSkill();
 
           $advertSkill->setAdvert($advert);
@@ -179,6 +182,26 @@ class AdvertController extends Controller
         return $this->render('OCPlatformBundle:Advert:edit.html.twig', array(
           'advert' => $advert
         ));
+    }
+
+    public function editImageAction($advertId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        // On récupère l'annonce
+        $advert = $em->getRepository('OCPlatformBundle:Advert')->find($advertId);
+
+        // On modifie l'URL de l'image par exemple
+        $advert->getImage()->setUrl('test.png');
+
+        // On n'a pas besoin de persister l'annonce ni l'image
+        // Rappelez-vous, ces entités sont automatiquement persistées car
+        // on les a récupérées depuis Doctrine lui-même
+
+        // On déclenche la modification
+        $em->flush();
+
+        return new Response('OK');
     }
 
     public function deleteAction($id)

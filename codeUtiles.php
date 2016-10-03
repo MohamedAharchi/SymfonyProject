@@ -183,7 +183,7 @@ public function indexAction()
 }
 
 
-/************** ORM (Object Relation Mapping) *************/
+/************** Doctrine ORM (Object Relation Mapping) *************/
 // Documentation officiel sur le lien suivant : http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/basic-mapping.html
 // Autre doc : http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/index.html
 // Documentation Doctrine pour gérer plusieurs base de données dans un seul projet : https://symfony.com/fr/doc/current/cookbook/doctrine/multiple_entity_managers.html
@@ -223,3 +223,9 @@ public function editImageAction($advertId)
   return new Response('OK');
 }
 
+/* Les relations uni et bidirectionnelles */
+// Documentation création des relations : http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/association-mapping.html
+// Documentation utilisation des relations : http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/working-with-associations.html
+
+
+// Documentation Bundle Symfony Doctrine Fixtures Bundle : https://symfony.com/fr/doc/current/bundles/DoctrineFixturesBundle/index.html
