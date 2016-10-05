@@ -117,7 +117,7 @@ class AdvertController extends Controller
     // On passe la méthode createView() du formulaire à la vue
     // afin qu'elle puisse afficher le formulaire toute seule
     return $this->render('OCPlatformBundle:Advert:add.html.twig', array(
-      'form' => $form->createView(),
+       'form' => $form->createView(),
     ));
   }
 
