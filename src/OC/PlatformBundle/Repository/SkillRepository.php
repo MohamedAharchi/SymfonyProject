@@ -1,6 +1,6 @@
 <?php
 
-namespace OC\PlatformBundle\Repository;
+namespace OC\PlatformBundle\Entity;
 
 /**
  * SkillRepository

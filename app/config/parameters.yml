@@ -1,8 +1,7 @@
 # This file is auto-generated during the composer install
 parameters:
-    database_driver: pdo_mysql
     database_host: localhost
-    database_port: ~
+    database_port: null
     database_name: symfony
     database_user: root
     database_password: null
@@ -11,4 +10,4 @@ parameters:
     mailer_user: null
     mailer_password: null
     secret: 2743c7f78427f706273f4b7a9c7620500717b1f2
-    app_webmaster: Mohamed Aharchi
+    app_webmaster: Mohamed AHARCHI

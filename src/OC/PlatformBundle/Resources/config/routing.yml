@@ -1,11 +1,13 @@
+# src/OC/PlatformBundle/Resources/config/routing.yml
+
 oc_platform_home:
     path:      /{page}
     defaults:
         _controller: OCPlatformBundle:Advert:index
         page:        1
     requirements:
-        page:  \d*
-
+        page: \d*
+    
 oc_platform_view:
     path:      /advert/{id}
     defaults:
@@ -21,13 +23,13 @@ oc_platform_add:
 oc_platform_edit:
     path:      /edit/{id}
     defaults:
-        _controller:  OCPlatformBundle:Advert:edit
+        _controller: OCPlatformBundle:Advert:edit
     requirements:
-        id:  \d+
+        id: \d+
 
 oc_platform_delete:
     path:      /delete/{id}
     defaults:
         _controller: OCPlatformBundle:Advert:delete
     requirements:
-        id:  \d+
+        id: \d+
