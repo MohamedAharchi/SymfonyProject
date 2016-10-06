@@ -9,6 +9,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class AdvertRepository extends EntityRepository
 {
+
   public function getAdverts($page, $nbPerPage)
   {
     $query = $this->createQueryBuilder('a')
@@ -30,6 +31,20 @@ class AdvertRepository extends EntityRepository
     // Enfin, on retourne l'objet Paginator correspondant à la requête construite
     // (n'oubliez pas le use correspondant en début de fichier)
     return new Paginator($query, true);
+  }
+
+  public function getAdvertsWithoutApp($dateDiff)
+  {
+    $query = $this->createQueryBuilder('a')
+      ->where('a.applications is empty')
+      ->andWhere('a.updatedAt < :dateDiff')
+      ->setParameter('dateDiff', $dateDiff)
+    ;
+
+    return $query
+      ->getQuery()
+      ->getResult()
+    ;
   }
 
   public function myFindAll()

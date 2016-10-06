@@ -492,3 +492,55 @@ public function editImageAction($advertId)
 
   /************ OUTIL SENSIO LABAS ************/
   // Lien outil d'analyse de code de Symfony (SensioLabsInsight) : https://insight.sensiolabs.com/
+
+
+  /************ PERSONNALISER LES FORMULAIRES TWIG *************/
+  // Documentation officielle : https://symfony.com/doc/current/forms.html#form-theming
+  // Documentation pour créer des types de champs personnaliser : https://symfony.com/doc/current/form/create_custom_field_type.html
+
+  public function addAction(Request $request)
+  {    
+    /*$em = $this->getDoctrine()->getManager();
+
+    // On ne sait toujours pas gérer le formulaire, patience cela vient dans la prochaine partie !
+
+    if ($request->isMethod('POST')) {
+      $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+
+      return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
+    }*/
+
+    // On crée un objet Advert
+    $advert = new Advert();
+
+    // On crée le FormBuilder grâce au service form factory
+    $form = $this->get('form.factory')->create(AdvertType::class, $advert);
+
+    // Si la requête est en POST
+    if($request->isMethod('POST')) {
+      // On fait le lien Requête <-> Formulaire
+      // A partir de maintenant, la variable $advert contient les valeurs entrées dans le formulaire par le visiteur
+      $form->handleRequest($request);
+
+      // On vérifie que les valeurs entrées sont correctes
+      // (Nous verrons la validation des objets en détail dans le prochain chapitre)
+      if($form->isValid()) {
+        // On enregistre notre objet $advert dans la base de données, par exemple
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($advert);
+        $em->flush();
+
+        $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+
+        // On redirige vers la page de visualisation de l'annonce nouvellement créée
+        return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
+      }  
+    }
+
+    // À ce stade, le formulaire n'est pas valide car :
+    // - Soit la requête est de type GET, donc le visiteur vient d'arriver sur la page et veut voir le formulaire
+    // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
+    return $this->render('OCPlatformBundle:Advert:add.html.twig', array(
+       'form' => $form->createView(),
+    ));
+  }

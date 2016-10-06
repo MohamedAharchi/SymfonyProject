@@ -70,6 +70,11 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
                 return $this->mergeDefaults(array_replace($matches, array('_route' => 'oc_platform_delete')), array (  '_controller' => 'OC\\PlatformBundle\\Controller\\AdvertController::deleteAction',));
             }
 
+            // oc_platform_purge_advert
+            if (0 === strpos($pathinfo, '/platform/purge') && preg_match('#^/platform/purge/(?P<days>[^/]++)$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'oc_platform_purge_advert')), array (  '_controller' => 'OC\\PlatformBundle\\Controller\\AdvertController::purgeAdvertAction',));
+            }
+
         }
 
         // homepage

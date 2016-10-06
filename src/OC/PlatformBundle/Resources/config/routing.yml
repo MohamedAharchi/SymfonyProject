@@ -7,7 +7,7 @@ oc_platform_home:
         page:        1
     requirements:
         page: \d*
-    
+
 oc_platform_view:
     path:      /advert/{id}
     defaults:
@@ -31,5 +31,12 @@ oc_platform_delete:
     path:      /delete/{id}
     defaults:
         _controller: OCPlatformBundle:Advert:delete
+    requirements:
+        id: \d+
+
+oc_platform_purge_advert:
+    path:      /purge/{days}
+    defaults:
+        _controller: OCPlatformBundle:Advert:purgeAdvert
     requirements:
         id: \d+

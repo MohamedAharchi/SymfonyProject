@@ -9,6 +9,11 @@
 {% block ocplatform_body %}
 
   <h2>Liste des annonces</h2>
+  
+  {# On affiche tous les messages flash dont le nom est « info » #}
+  {% for message in app.session.flashbag.get('info') %}
+    <div class="alert alert-info">Message flash : {{ message }}</div>
+  {% endfor %}
 
   <ul>
     {% for advert in listAdverts %}
