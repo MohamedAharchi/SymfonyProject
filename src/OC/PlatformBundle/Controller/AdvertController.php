@@ -5,7 +5,6 @@
 namespace OC\PlatformBundle\Controller;
 
 use OC\PlatformBundle\Entity\Advert;
-use OC\PlatformBundle\Form\AdvertType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -119,14 +118,15 @@ class AdvertController extends Controller
   {
     $em = $this->getDoctrine()->getManager();
     $advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
-    $form = $this->get('form.factory')->create(AdvertType::class, $advert);
+
+    $form = $this->get('form.factory')->create(AdvertEditType::class, $advert);
 
     if($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
       
         $em->persist($advert);
         $em->flush();
 
-        $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+        $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
 
         return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
     }
