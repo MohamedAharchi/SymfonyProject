@@ -544,3 +544,5 @@ public function editImageAction($advertId)
        'form' => $form->createView(),
     ));
   }
+
+// Documentation des évènements de formulaire : https://symfony.com/doc/current/form/dynamic_form_modification.html

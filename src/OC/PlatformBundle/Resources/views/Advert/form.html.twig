@@ -9,85 +9,39 @@
   {{ form_errors(form) }}
 
   {# Génération du label + error + widget pour un champ. #}
-  <div class="form-group">
-  	<div class="col-sm-12">
-  		{% if form.date is defined %}
-  			{{ form_row(form.date) }}
-  		{% endif %}
-    </div>
-  </div>
+  {{ form_row(form.date) }}
+  
+  {#
+  {{ form_label(form.image.file, "Image", {'label_attr': {'class': 'control-label'}}) }}
+  #}
+  {{ form_row(form.image.file) }}
+
   {# Génération manuelle et éclatée : #}
   <div class="form-group">
     {# Génération du label. #}
-    <div class="col-sm-2">
-    	{{ form_label(form.title, "Titre", {'label_attr': {'class': 'control-label'}}) }}
-	</div>
+    {{ form_label(form.title, "Titre de l'annonce", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+
     {# Affichage des erreurs pour ce champ précis. #}
     {{ form_errors(form.title) }}
+
     <div class="col-sm-10">
-    	{# Génération de l'input. #}
-    	{{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
-	</div>
+      {# Génération de l'input. #}
+      {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+    </div>
   </div>
 
   {# Idem pour un autre champ. #}
   <div class="form-group">
-  	<div class="col-sm-2">
-    	{{ form_label(form.content, "Contenu", {'label_attr': {'class': 'control-label'}}) }}
+    {{ form_label(form.content, "Contenu de l'annonce", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+    {{ form_errors(form.title) }}
+    <div class="col-sm-10">
+      {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
     </div>
-    
-    {{ form_errors(form.content) }}
-    
-    <div class="col-sm-10">
-    	{{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
-	</div>
   </div>
 
-  <div class="form-group">
-  	<div class="col-sm-2">
-    	{{ form_label(form.author, "Author", {'label_attr': {'class': 'control-label'}}) }}
-    </div>
-    
-    {{ form_errors(form.author) }}
-    
-    <div class="col-sm-10">
-    	{{ form_widget(form.author, {'attr': {'class': 'form-control'}}) }}
-	</div>
-  </div>
-
-  <div class="form-group">
-  	<div class="col-sm-2">
-    	{{ form_label(form.image.url, "Url", {'label_attr': {'class': 'control-label'}}) }}
-    </div>
-    
-    {{ form_errors(form.image.url) }}
-    
-    <div class="col-sm-10">
-    	{{ form_widget(form.image.url, {'attr': {'class': 'form-control'}}) }}
-	</div>
-  </div>
-
-  <div class="form-group">
-  	<div class="col-sm-2">
-    	{{ form_label(form.image.alt, "Alt", {'label_attr': {'class': 'control-label'}}) }}
-    </div>
-    
-    {{ form_errors(form.image.alt) }}
-    
-    <div class="col-sm-10">
-    	{{ form_widget(form.image.alt, {'attr': {'class': 'form-control'}}) }}
-	</div>
-  </div>
-
-  <div class="form-group">
-  	<div class="col-sm-2">
-    </div>    
-    {{ form_errors(form.author) }}    
-    <div class="col-sm-10">
-    	{{ form_widget(form.published, {'attr': {'class': ''}}) }}
-	</div>
-  </div>
-
+  {{ form_row(form.author) }}
+  {{ form_row(form.published) }}
+   
   {{ form_row(form.categories) }}
   <a href="#" id="add_category" class="btn btn-default">Ajouter une catégorie</a>
 
