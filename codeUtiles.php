@@ -548,7 +548,9 @@ public function editImageAction($advertId)
 // Documentation des évènements de formulaire : https://symfony.com/doc/current/form/dynamic_form_modification.html$
   
 // Documentation VichUploaderBundle pour l'envoi de fichiers : https://github.com/dustin10/VichUploaderBundle
+/************************** FIN PARTIE FORMULAIRE *****************************/
   
+/***************************** LES CONTRAINTES ********************************/  
 // Documentation officielle sur les contraintes du bundle Validator : https://symfony.com/doc/current/reference/constraints.html
 // Le Tableau OpenClassroom sur les contraintes du bundle Validator : https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony/validez-vos-donnees-1
 // Documentation comportant d'autre contraintes du bundle Validator : https://symfony.com/doc/current/validation.html#supported-constraints
@@ -581,3 +583,9 @@ public function testAction()
 }
 
 // Documentation officielle pour la création de contraintes : https://symfony.com/doc/current/validation/custom_constraint.html
+/************************* FIN PARTIE CONTRAINTES *******************/
+
+
+/******************** PARTIE SECURITE *******************/
+// Documentation officielle sur les 2 principes de sécurité Symfony (l'authentification et l'autorisation) : https://symfony.com/doc/current/security.html
+// Documentation officielle pour la configuration du formulaire de connexion : https://symfony.com/doc/current/security/form_login_setup.html

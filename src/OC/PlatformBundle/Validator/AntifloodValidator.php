@@ -22,8 +22,9 @@ class AntifloodValidator extends ConstraintValidator
     
     public function validate($value, Constraint $constraint)
     {
+        /******************** EXEMPLE **************************/
         // Pour récupérer l'objet Request tel qu'on le connait, il faut utiliser getCurrentRequest du service request_stack
-        $request = $this->requestStack->getCurrentRequest();
+        /*$request = $this->requestStack->getCurrentRequest();
         
         // On récupère l'IP de celui qui poste
         $ip = $request->getClientIp();
@@ -37,12 +38,13 @@ class AntifloodValidator extends ConstraintValidator
         if($isFlood) {
             // C'est cette ligne qui déclenche l'erreur pour le formulaire, avec en argument le message
             $this->context->addViolation($constraint->message);
-        }
+        }*/
+        /***************** FIN D'EXEMPLE ***********************/
         
         // Pour l'instant, on considère comme flood tout message de moins de 3 caractères
-        /*if(strlen($value) < 3) {
+        if(strlen($value) < 3) {
             // C'est cette ligne qui déclenche l'erreur pour le formulaire, avec en argument le message de la constrainte
             $this->context->addViolation($constraint->message);
-        }*/
+        }
     }
 }
