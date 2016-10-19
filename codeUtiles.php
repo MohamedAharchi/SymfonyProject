@@ -548,3 +548,36 @@ public function editImageAction($advertId)
 // Documentation des évènements de formulaire : https://symfony.com/doc/current/form/dynamic_form_modification.html$
   
 // Documentation VichUploaderBundle pour l'envoi de fichiers : https://github.com/dustin10/VichUploaderBundle
+  
+// Documentation officielle sur les contraintes du bundle Validator : https://symfony.com/doc/current/reference/constraints.html
+// Le Tableau OpenClassroom sur les contraintes du bundle Validator : https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony/validez-vos-donnees-1
+// Documentation comportant d'autre contraintes du bundle Validator : https://symfony.com/doc/current/validation.html#supported-constraints
+  
+// Exemple
+<?php
+// Depuis un contrôleur
+public function testAction()
+{
+  $advert = new Advert;
+
+  $advert->setDate(new \Datetime());  // Champ « date » OK
+  $advert->setTitle('abc');           // Champ « title » incorrect : moins de 10 caractères
+  //$advert->setContent('blabla');    // Champ « content » incorrect : on ne le définit pas
+  $advert->setAuthor('A');            // Champ « author » incorrect : moins de 2 caractères
+
+  // On récupère le service validator
+  $validator = $this->get('validator');
+
+  // On déclenche la validation sur notre object
+  $listErrors = $validator->validate($advert);
+
+  // Si $listErrors n'est pas vide, on affiche les erreurs
+  if(count($listErrors) > 0) {
+    // $listErrors est un objet, sa méthode __toString permet de lister joliement les erreurs
+    return new Response((string) $listErrors);
+  } else {
+    return new Response("L'annonce est valide !");
+  }
+}
+
+// Documentation officielle pour la création de contraintes : https://symfony.com/doc/current/validation/custom_constraint.html
