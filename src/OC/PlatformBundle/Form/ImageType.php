@@ -16,4 +16,11 @@ class ImageType extends AbstractType
       ->add('file', FileType::class)
     ;
   }
+
+  public function configureOptions(OptionsResolver $resolver)
+  {
+    $resolver->setDefaults(array(
+      'data_class' => 'OC\PlatformBundle\Entity\Image'
+    ));
+  }
 }

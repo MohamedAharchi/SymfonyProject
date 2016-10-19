@@ -545,4 +545,6 @@ public function editImageAction($advertId)
     ));
   }
 
-// Documentation des évènements de formulaire : https://symfony.com/doc/current/form/dynamic_form_modification.html
+// Documentation des évènements de formulaire : https://symfony.com/doc/current/form/dynamic_form_modification.html$
+  
+// Documentation VichUploaderBundle pour l'envoi de fichiers : https://github.com/dustin10/VichUploaderBundle

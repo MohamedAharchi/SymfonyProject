@@ -1,4 +1,5 @@
 <?php
+// src/OC/PlatformBundle/Form/AdvertEditType.php
 
 namespace OC\PlatformBundle\Form;
 
@@ -12,7 +13,7 @@ class AdvertEditType extends AbstractType
     $builder->remove('date');
   }
 
-  public function configureOptions(OptionsResolver $resolver)
+  public function getParent()
   {
     return AdvertType::class;
   }
