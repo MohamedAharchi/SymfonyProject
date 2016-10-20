@@ -589,3 +589,6 @@ public function testAction()
 /******************** PARTIE SECURITE *******************/
 // Documentation officielle sur les 2 principes de sécurité Symfony (l'authentification et l'autorisation) : https://symfony.com/doc/current/security.html
 // Documentation officielle pour la configuration du formulaire de connexion : https://symfony.com/doc/current/security/form_login_setup.html
+// Documentation officielle imposer des autorisations avec des annotations : https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/security.html
+// UserInterface : https://github.com/symfony/symfony/blob/master/src/Symfony/Component/Security/Core/User/UserInterface.php
+// Documentation officielle pour le fournisseur (provider) entity : https://symfony.com/doc/current/security/entity_provider.html

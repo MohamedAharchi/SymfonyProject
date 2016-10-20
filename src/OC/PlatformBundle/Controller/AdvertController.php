@@ -13,6 +13,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 
 class AdvertController extends Controller
 {
@@ -89,26 +92,29 @@ class AdvertController extends Controller
       'listAdvertSkills' => $listAdvertSkills,
     ));
   }
+  
+    /**
+   * @Security("has_role('ROLE_AUTEUR')")
+   */
+    public function addAction(Request $request)
+    {        
+        $advert = new Advert();
+        $form   = $this->get('form.factory')->create(AdvertType::class, $advert);
 
-  public function addAction(Request $request)
-  {
-    $advert = new Advert();
-    $form   = $this->get('form.factory')->create(AdvertType::class, $advert);
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+          $em = $this->getDoctrine()->getManager();
+          $em->persist($advert);
+          $em->flush();
 
-    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-      $em = $this->getDoctrine()->getManager();
-      $em->persist($advert);
-      $em->flush();
+          $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
 
-      $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+          return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
+        }
 
-      return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
+        return $this->render('OCPlatformBundle:Advert:add.html.twig', array(
+          'form' => $form->createView(),
+        ));
     }
-
-    return $this->render('OCPlatformBundle:Advert:add.html.twig', array(
-      'form' => $form->createView(),
-    ));
-  }
 
   public function editAction($id, Request $request)
   {
