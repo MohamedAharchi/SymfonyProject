@@ -13,7 +13,7 @@ class LoadUser implements FixtureInterface
   {
     // Les noms d'utilisateurs à créer
     $listNames = array('Alexandre', 'Marine', 'Anna');
-
+    $i = 0;
     foreach ($listNames as $name) {
       // On crée l'utilisateur
       $user = new User;
@@ -21,14 +21,14 @@ class LoadUser implements FixtureInterface
       // Le nom d'utilisateur et le mot de passe sont identiques pour l'instant
       $user->setUsername($name);
       $user->setPassword($name);
-
-      // On ne se sert pas du sel pour l'instant
-      $user->setSalt('');
+      $user->setEmail('alex'.$i.'@andre.fr');
+      
       // On définit uniquement le role ROLE_USER qui est le role de base
       $user->setRoles(array('ROLE_USER'));
 
       // On le persiste
       $manager->persist($user);
+      $i++;
     }
 
     // On déclenche l'enregistrement

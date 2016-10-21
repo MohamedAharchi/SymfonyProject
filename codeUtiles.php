@@ -592,3 +592,7 @@ public function testAction()
 // Documentation officielle imposer des autorisations avec des annotations : https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/security.html
 // UserInterface : https://github.com/symfony/symfony/blob/master/src/Symfony/Component/Security/Core/User/UserInterface.php
 // Documentation officielle pour le fournisseur (provider) entity : https://symfony.com/doc/current/security/entity_provider.html
+// Liste des attributs FOSUser disponible sur : https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Resources/config/doctrine-mapping/User.orm.xml
+// Documentation officielle FOSUserBundle : https://symfony.com/doc/master/bundles/FOSUserBundle/index.html
+// Utilisation des Groups avec FOSUserBundle : https://symfony.com/doc/master/bundles/FOSUserBundle/groups.html
+// Utilisation d'ACL pour définir des droits bien plus finement que les rôles : https://symfony.com/doc/current/security/acl.html
