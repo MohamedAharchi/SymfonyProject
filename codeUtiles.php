@@ -596,3 +596,12 @@ public function testAction()
 // Documentation officielle FOSUserBundle : https://symfony.com/doc/master/bundles/FOSUserBundle/index.html
 // Utilisation des Groups avec FOSUserBundle : https://symfony.com/doc/master/bundles/FOSUserBundle/groups.html
 // Utilisation d'ACL pour définir des droits bien plus finement que les rôles : https://symfony.com/doc/current/security/acl.html
+/****************** FIN PARTIE SECURITE ****************/
+
+/********** LES SERVICES UTILISATION POUSSEE *************/
+/* Connaitre tous les services implémentant un certain tag : php bin/console debug:container --tag=twig.extension
+/* Documentation officielle pour la création d'extensions Twig : http://twig.sensiolabs.org/doc/advanced.html#creating-an-extension
+/* Documentation officielle dictionnaire des tags : https://symfony.com/doc/current/reference/dic_tags.html 
+/* Documentation officielle sur la création de type de champ : https://symfony.com/doc/current/form/create_custom_field_type.html
+ 
+/* Les services par défaut de Symfony les plus utilisés : https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony/les-services-utilisation-poussee-1#r-3624936
