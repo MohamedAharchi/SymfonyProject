@@ -345,6 +345,11 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
         }
         not_fos_user_change_password:
 
+        // oc_platform_translation
+        if (0 === strpos($pathinfo, '/traduction') && preg_match('#^/traduction/(?P<name>[^/]++)$#s', $pathinfo, $matches)) {
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'oc_platform_translation')), array (  '_controller' => 'OC\\PlatformBundle\\Controller\\AdvertController::translationAction',));
+        }
+
         throw 0 < count($allow) ? new MethodNotAllowedException(array_unique($allow)) : new ResourceNotFoundException();
     }
 }

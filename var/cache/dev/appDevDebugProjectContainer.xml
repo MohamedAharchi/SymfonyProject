@@ -571,7 +571,7 @@
                   <tag name="cache.pool"/>
                   <argument>SEId0ueupg</argument>
                   <argument>0</argument>
-                  <argument>wmz93hp8k8iWnzndvzFKpA</argument>
+                  <argument>ZGw9PEKbA5OGdx7BY3Cxrg</argument>
                   <argument>C:\wamp\www\Symfony\var\cache\dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -584,7 +584,7 @@
                   <tag name="cache.pool"/>
                   <argument>fbHmzgigaQ</argument>
                   <argument>0</argument>
-                  <argument>wmz93hp8k8iWnzndvzFKpA</argument>
+                  <argument>ZGw9PEKbA5OGdx7BY3Cxrg</argument>
                   <argument>C:\wamp\www\Symfony\var\cache\dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -774,6 +774,7 @@
             <argument>C:\wamp\www\Symfony\vendor\symfony\symfony\src\Symfony\Component\Validator/Resources/translations\validators.de.xlf</argument>
             <argument>C:\wamp\www\Symfony\vendor\symfony\symfony\src\Symfony\Component\Form/Resources/translations\validators.de.xlf</argument>
             <argument>C:\wamp\www\Symfony\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.de.xlf</argument>
+            <argument>C:\wamp\www\Symfony\src\OC\PlatformBundle/Resources/translations\messages.de.yml</argument>
             <argument>C:\wamp\www\Symfony\vendor\friendsofsymfony\user-bundle/Resources/translations\FOSUserBundle.de.yml</argument>
             <argument>C:\wamp\www\Symfony\vendor\friendsofsymfony\user-bundle/Resources/translations\validators.de.yml</argument>
           </argument>
@@ -826,6 +827,7 @@
             <argument>C:\wamp\www\Symfony\vendor\symfony\symfony\src\Symfony\Component\Validator/Resources/translations\validators.fr.xlf</argument>
             <argument>C:\wamp\www\Symfony\vendor\symfony\symfony\src\Symfony\Component\Form/Resources/translations\validators.fr.xlf</argument>
             <argument>C:\wamp\www\Symfony\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.fr.xlf</argument>
+            <argument>C:\wamp\www\Symfony\src\OC\PlatformBundle/Resources/translations\messages.fr.yml</argument>
             <argument>C:\wamp\www\Symfony\vendor\friendsofsymfony\user-bundle/Resources/translations\FOSUserBundle.fr.yml</argument>
             <argument>C:\wamp\www\Symfony\vendor\friendsofsymfony\user-bundle/Resources/translations\validators.fr.yml</argument>
           </argument>
@@ -1235,7 +1237,7 @@
       <tag name="cache.pool"/>
       <argument>sJBOXbOooW</argument>
       <argument>0</argument>
-      <argument>wmz93hp8k8iWnzndvzFKpA</argument>
+      <argument>ZGw9PEKbA5OGdx7BY3Cxrg</argument>
       <argument>C:\wamp\www\Symfony\var\cache\dev/pools</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -2036,7 +2038,7 @@
         </argument>
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-            <argument>580f64af9fde78.59503049</argument>
+            <argument>58121b7db05de5.34133895</argument>
           </service>
         </argument>
       </argument>
@@ -2343,7 +2345,7 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
             <argument type="service" id="security.token_storage"/>
-            <argument>580f64af9fde78.59503049</argument>
+            <argument>58121b7db05de5.34133895</argument>
             <argument type="service" id="monolog.logger.security" on-invalid="null"/>
             <argument type="service" id="security.authentication.manager"/>
           </service>
