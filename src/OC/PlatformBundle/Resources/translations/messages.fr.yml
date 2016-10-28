@@ -1,2 +1,2 @@
-Hello: Bonjour
+hello: Bonjour %name% !
 Bye: Au revoir

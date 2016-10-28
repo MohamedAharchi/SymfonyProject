@@ -2107,7 +2107,7 @@ if (!isset($this->listeners[$eventName])) {
 return;
 }
 foreach ($this->listeners[$eventName] as $priority => $listeners) {
-if (false !== ($key = array_search($listener, $listeners, true))) {
+if (false !== in_array($listener, $listeners, true)) {
 return $priority;
 }
 }
@@ -2626,7 +2626,7 @@ $this->type = $type;
 $this->isVariadic = $isVariadic;
 $this->hasDefaultValue = $hasDefaultValue;
 $this->defaultValue = $defaultValue;
-$this->isNullable = (bool) $isNullable;
+$this->isNullable = $isNullable || null === $type || ($hasDefaultValue && null === $defaultValue);
 }
 public function getName()
 {
@@ -2686,7 +2686,7 @@ $reflection = (new \ReflectionObject($controller))->getMethod('__invoke');
 $reflection = new \ReflectionFunction($controller);
 }
 foreach ($reflection->getParameters() as $param) {
-$arguments[] = new ArgumentMetadata($param->getName(), $this->getType($param), $this->isVariadic($param), $this->hasDefaultValue($param), $this->getDefaultValue($param), $this->isNullable($param));
+$arguments[] = new ArgumentMetadata($param->getName(), $this->getType($param), $this->isVariadic($param), $this->hasDefaultValue($param), $this->getDefaultValue($param), $param->allowsNull());
 }
 return $arguments;
 }
@@ -2698,13 +2698,6 @@ private function hasDefaultValue(\ReflectionParameter $parameter)
 {
 return $parameter->isDefaultValueAvailable();
 }
-private function isNullable(\ReflectionParameter $parameter)
-{
-if ($this->supportsParameterType) {
-return null !== ($type = $parameter->getType()) && $type->allowsNull();
-}
-return $this->hasDefaultValue($parameter) && null === $this->getDefaultValue($parameter);
-}
 private function getDefaultValue(\ReflectionParameter $parameter)
 {
 return $this->hasDefaultValue($parameter) ? $parameter->getDefaultValue() : null;
@@ -2712,20 +2705,18 @@ return $this->hasDefaultValue($parameter) ? $parameter->getDefaultValue() : null
 private function getType(\ReflectionParameter $parameter)
 {
 if ($this->supportsParameterType) {
-return $parameter->hasType() ? (string) $parameter->getType() : null;
+if (!$type = $parameter->getType()) {
+return;
 }
-if ($parameter->isArray()) {
-return'array';
+$typeName = $type instanceof \ReflectionNamedType ? $type->getName() : $type->__toString();
+if ('array'=== $typeName && !$type->isBuiltin()) {
+return;
 }
-if ($parameter->isCallable()) {
-return'callable';
+return $typeName;
 }
-try {
-$refClass = $parameter->getClass();
-} catch (\ReflectionException $e) {
-return str_replace(array('Class ',' does not exist'),'', $e->getMessage());
+if (preg_match('/^(?:[^ ]++ ){4}([a-zA-Z_\x7F-\xFF][^ ]++)/', $parameter, $info)) {
+return $info[1];
 }
-return $refClass ? $refClass->getName() : null;
 }
 }
 }
@@ -3538,7 +3529,7 @@ namespace
 {
 class Twig_Environment
 {
-const VERSION ='1.26.0';
+const VERSION ='1.27.0';
 protected $charset;
 protected $loader;
 protected $debug;
@@ -3569,7 +3560,7 @@ private $originalCache;
 private $bcWriteCacheFile = false;
 private $bcGetCacheFilename = false;
 private $lastModifiedExtension = 0;
-private $legacyExtensionNames = array();
+private $extensionsByClass = array();
 private $runtimeLoaders = array();
 private $runtimes = array();
 private $optionsHash;
@@ -3716,7 +3707,13 @@ if (!$this->isAutoReload() || $this->isTemplateFresh($name, $this->cache->getTim
 $this->cache->load($key);
 }
 if (!class_exists($cls, false)) {
-$content = $this->compileSource($this->getLoader()->getSource($name), $name);
+$loader = $this->getLoader();
+if (!$loader instanceof Twig_SourceContextLoaderInterface) {
+$source = new Twig_Source($loader->getSource($name), $name);
+} else {
+$source = $loader->getSourceContext($name);
+}
+$content = $this->compileSource($source);
 if ($this->bcWriteCacheFile) {
 $this->writeCacheFile($key, $content);
 } else {
@@ -3811,10 +3808,14 @@ $this->lexer = $lexer;
 }
 public function tokenize($source, $name = null)
 {
+if (!$source instanceof Twig_Source) {
+@trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
+$source = new Twig_Source($source, $name);
+}
 if (null === $this->lexer) {
 $this->lexer = new Twig_Lexer($this);
 }
-return $this->lexer->tokenize($source, $name);
+return $this->lexer->tokenize($source);
 }
 public function getParser()
 {
@@ -3856,17 +3857,24 @@ return $this->compiler->compile($node)->getSource();
 }
 public function compileSource($source, $name = null)
 {
+if (!$source instanceof Twig_Source) {
+@trigger_error(sprintf('Passing a string as the $source argument of %s() is deprecated since version 1.27. Pass a Twig_Source instance instead.', __METHOD__), E_USER_DEPRECATED);
+$source = new Twig_Source($source, $name);
+}
 try {
-return $this->compile($this->parse($this->tokenize($source, $name)));
+return $this->compile($this->parse($this->tokenize($source)));
 } catch (Twig_Error $e) {
-$e->setTemplateFile($name);
+$e->setTemplateName($source->getName());
 throw $e;
 } catch (Exception $e) {
-throw new Twig_Error_Syntax(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $name, $e);
+throw new Twig_Error_Syntax(sprintf('An exception has been thrown during the compilation of a template ("%s").', $e->getMessage()), -1, $source->getName(), $e);
 }
 }
 public function setLoader(Twig_LoaderInterface $loader)
 {
+if (!$loader instanceof Twig_SourceContextLoaderInterface && 0 !== strpos(get_class($loader),'Mock_Twig_LoaderInterface')) {
+@trigger_error(sprintf('Twig loader "%s" should implement Twig_SourceContextLoaderInterface since version 1.27.', get_class($loader)), E_USER_DEPRECATED);
+}
 $this->loader = $loader;
 }
 public function getLoader()
@@ -3899,11 +3907,14 @@ $extension->initRuntime($this);
 }
 public function hasExtension($class)
 {
-if (isset($this->legacyExtensionNames[$class])) {
-$class = $this->legacyExtensionNames[$class];
+$class = ltrim($class,'\\');
+if (isset($this->extensions[$class])) {
+if ($class !== get_class($this->extensions[$class])) {
 @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
 }
-return isset($this->extensions[ltrim($class,'\\')]);
+return true;
+}
+return isset($this->extensionsByClass[ltrim($class,'\\')]);
 }
 public function addRuntimeLoader(Twig_RuntimeLoaderInterface $loader)
 {
@@ -3911,15 +3922,17 @@ $this->runtimeLoaders[] = $loader;
 }
 public function getExtension($class)
 {
-if (isset($this->legacyExtensionNames[$class])) {
-$class = $this->legacyExtensionNames[$class];
+$class = ltrim($class,'\\');
+if (isset($this->extensions[$class])) {
+if ($class !== get_class($this->extensions[$class])) {
 @trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
 }
-$class = ltrim($class,'\\');
-if (!isset($this->extensions[$class])) {
+return $this->extensions[$class];
+}
+if (!isset($this->extensionsByClass[$class])) {
 throw new Twig_Error_Runtime(sprintf('The "%s" extension is not enabled.', $class));
 }
-return $this->extensions[$class];
+return $this->extensionsByClass[$class];
 }
 public function getRuntime($class)
 {
@@ -3935,34 +3948,35 @@ throw new Twig_Error_Runtime(sprintf('Unable to load the "%s" runtime.', $class)
 }
 public function addExtension(Twig_ExtensionInterface $extension)
 {
-$class = get_class($extension);
 if ($this->extensionInitialized) {
-throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $class));
+throw new LogicException(sprintf('Unable to register extension "%s" as extensions have already been initialized.', $extension->getName()));
 }
-$m = new ReflectionMethod($extension,'getName');
-$legacyName ='Twig_Extension'!== $m->getDeclaringClass()->getName() ? $extension->getName() : null;
-if (isset($this->extensions[$class]) || (null !== $legacyName && isset($this->legacyExtensionNames[$legacyName]))) {
-unset($this->extensions[$this->legacyExtensionNames[$legacyName]], $this->legacyExtensionNames[$legacyName]);
-@trigger_error(sprintf('The possibility to register the same extension twice ("%s") is deprecated since version 1.23 and will be removed in Twig 2.0. Use proper PHP inheritance instead.', $class), E_USER_DEPRECATED);
+$class = get_class($extension);
+if ($class !== $extension->getName()) {
+if (isset($this->extensions[$extension->getName()])) {
+unset($this->extensions[$extension->getName()], $this->extensionsByClass[$class]);
+@trigger_error(sprintf('The possibility to register the same extension twice ("%s") is deprecated since version 1.23 and will be removed in Twig 2.0. Use proper PHP inheritance instead.', $extension->getName()), E_USER_DEPRECATED);
+}
 }
 $this->lastModifiedExtension = 0;
-if ($legacyName !== $class) {
-$this->legacyExtensionNames[$legacyName] = $class;
-}
-$this->extensions[$class] = $extension;
+$this->extensionsByClass[$class] = $extension;
+$this->extensions[$extension->getName()] = $extension;
 $this->updateOptionsHash();
 }
 public function removeExtension($name)
 {
 @trigger_error(sprintf('The %s method is deprecated since version 1.12 and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
-if (isset($this->legacyExtensionNames[$name])) {
-$name = $this->legacyExtensionNames[$name];
-@trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $name), E_USER_DEPRECATED);
-}
 if ($this->extensionInitialized) {
 throw new LogicException(sprintf('Unable to remove extension "%s" as extensions have already been initialized.', $name));
 }
-unset($this->extensions[ltrim($name,'\\')]);
+$class = ltrim($name,'\\');
+if (isset($this->extensions[$class])) {
+if ($class !== get_class($this->extensions[$class])) {
+@trigger_error(sprintf('Referencing the "%s" extension by its name (defined by getName()) is deprecated since 1.26 and will be removed in Twig 2.0. Use the Fully Qualified Extension Class Name instead.', $class), E_USER_DEPRECATED);
+}
+unset($this->extensions[$class]);
+}
+unset($this->extensions[$class]);
 $this->updateOptionsHash();
 }
 public function setExtensions(array $extensions)
@@ -4514,61 +4528,9 @@ public function getOperators()
 return array(
 array('not'=> array('precedence'=> 50,'class'=>'Twig_Node_Expression_Unary_Not'),'-'=> array('precedence'=> 500,'class'=>'Twig_Node_Expression_Unary_Neg'),'+'=> array('precedence'=> 500,'class'=>'Twig_Node_Expression_Unary_Pos'),
 ),
-array('or'=> array('precedence'=> 10,'class'=>'Twig_Node_Expression_Binary_Or','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'and'=> array('precedence'=> 15,'class'=>'Twig_Node_Expression_Binary_And','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'b-or'=> array('precedence'=> 16,'class'=>'Twig_Node_Expression_Binary_BitwiseOr','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'b-xor'=> array('precedence'=> 17,'class'=>'Twig_Node_Expression_Binary_BitwiseXor','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'b-and'=> array('precedence'=> 18,'class'=>'Twig_Node_Expression_Binary_BitwiseAnd','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'=='=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_Equal','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'!='=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_NotEqual','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'<'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_Less','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'>'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_Greater','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'>='=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_GreaterEqual','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'<='=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_LessEqual','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'not in'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_NotIn','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'in'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_In','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'matches'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_Matches','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'starts with'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_StartsWith','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'ends with'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_EndsWith','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'..'=> array('precedence'=> 25,'class'=>'Twig_Node_Expression_Binary_Range','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'+'=> array('precedence'=> 30,'class'=>'Twig_Node_Expression_Binary_Add','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'-'=> array('precedence'=> 30,'class'=>'Twig_Node_Expression_Binary_Sub','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'~'=> array('precedence'=> 40,'class'=>'Twig_Node_Expression_Binary_Concat','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'*'=> array('precedence'=> 60,'class'=>'Twig_Node_Expression_Binary_Mul','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'/'=> array('precedence'=> 60,'class'=>'Twig_Node_Expression_Binary_Div','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'//'=> array('precedence'=> 60,'class'=>'Twig_Node_Expression_Binary_FloorDiv','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'%'=> array('precedence'=> 60,'class'=>'Twig_Node_Expression_Binary_Mod','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'is'=> array('precedence'=> 100,'callable'=> array($this,'parseTestExpression'),'associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'is not'=> array('precedence'=> 100,'callable'=> array($this,'parseNotTestExpression'),'associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'**'=> array('precedence'=> 200,'class'=>'Twig_Node_Expression_Binary_Power','associativity'=> Twig_ExpressionParser::OPERATOR_RIGHT),'??'=> array('precedence'=> 300,'class'=>'Twig_Node_Expression_NullCoalesce','associativity'=> Twig_ExpressionParser::OPERATOR_RIGHT),
+array('or'=> array('precedence'=> 10,'class'=>'Twig_Node_Expression_Binary_Or','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'and'=> array('precedence'=> 15,'class'=>'Twig_Node_Expression_Binary_And','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'b-or'=> array('precedence'=> 16,'class'=>'Twig_Node_Expression_Binary_BitwiseOr','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'b-xor'=> array('precedence'=> 17,'class'=>'Twig_Node_Expression_Binary_BitwiseXor','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'b-and'=> array('precedence'=> 18,'class'=>'Twig_Node_Expression_Binary_BitwiseAnd','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'=='=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_Equal','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'!='=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_NotEqual','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'<'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_Less','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'>'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_Greater','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'>='=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_GreaterEqual','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'<='=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_LessEqual','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'not in'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_NotIn','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'in'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_In','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'matches'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_Matches','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'starts with'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_StartsWith','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'ends with'=> array('precedence'=> 20,'class'=>'Twig_Node_Expression_Binary_EndsWith','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'..'=> array('precedence'=> 25,'class'=>'Twig_Node_Expression_Binary_Range','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'+'=> array('precedence'=> 30,'class'=>'Twig_Node_Expression_Binary_Add','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'-'=> array('precedence'=> 30,'class'=>'Twig_Node_Expression_Binary_Sub','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'~'=> array('precedence'=> 40,'class'=>'Twig_Node_Expression_Binary_Concat','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'*'=> array('precedence'=> 60,'class'=>'Twig_Node_Expression_Binary_Mul','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'/'=> array('precedence'=> 60,'class'=>'Twig_Node_Expression_Binary_Div','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'//'=> array('precedence'=> 60,'class'=>'Twig_Node_Expression_Binary_FloorDiv','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'%'=> array('precedence'=> 60,'class'=>'Twig_Node_Expression_Binary_Mod','associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'is'=> array('precedence'=> 100,'associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'is not'=> array('precedence'=> 100,'associativity'=> Twig_ExpressionParser::OPERATOR_LEFT),'**'=> array('precedence'=> 200,'class'=>'Twig_Node_Expression_Binary_Power','associativity'=> Twig_ExpressionParser::OPERATOR_RIGHT),'??'=> array('precedence'=> 300,'class'=>'Twig_Node_Expression_NullCoalesce','associativity'=> Twig_ExpressionParser::OPERATOR_RIGHT),
 ),
 );
-}
-public function parseNotTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
-{
-return new Twig_Node_Expression_Unary_Not($this->parseTestExpression($parser, $node), $parser->getCurrentToken()->getLine());
-}
-public function parseTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
-{
-$stream = $parser->getStream();
-list($name, $test) = $this->getTest($parser, $node->getLine());
-if ($test instanceof Twig_SimpleTest && $test->isDeprecated()) {
-$message = sprintf('Twig Test "%s" is deprecated', $name);
-if (!is_bool($test->getDeprecatedVersion())) {
-$message .= sprintf(' since version %s', $test->getDeprecatedVersion());
-}
-if ($test->getAlternative()) {
-$message .= sprintf('. Use "%s" instead', $test->getAlternative());
-}
-$message .= sprintf(' in %s at line %d.', $stream->getFilename(), $stream->getCurrent()->getLine());
-@trigger_error($message, E_USER_DEPRECATED);
-}
-$class = $this->getTestNodeClass($parser, $test);
-$arguments = null;
-if ($stream->test(Twig_Token::PUNCTUATION_TYPE,'(')) {
-$arguments = $parser->getExpressionParser()->parseArguments(true);
-}
-return new $class($node, $name, $arguments, $parser->getCurrentToken()->getLine());
-}
-protected function getTest(Twig_Parser $parser, $line)
-{
-$stream = $parser->getStream();
-$name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
-$env = $parser->getEnvironment();
-if ($test = $env->getTest($name)) {
-return array($name, $test);
-}
-if ($stream->test(Twig_Token::NAME_TYPE)) {
-$name = $name.' '.$parser->getCurrentToken()->getValue();
-if ($test = $env->getTest($name)) {
-$parser->getStream()->next();
-return array($name, $test);
-}
-}
-$e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.', $name), $line, $parser->getFilename());
-$e->addSuggestions($name, array_keys($env->getTests()));
-throw $e;
-}
-protected function getTestNodeClass(Twig_Parser $parser, $test)
-{
-if ($test instanceof Twig_SimpleTest) {
-return $test->getNodeClass();
-}
-return $test instanceof Twig_Test_Node ? $test->getClass() :'Twig_Node_Expression_Test';
 }
 public function getName()
 {
@@ -5136,8 +5098,13 @@ return $result;
 }
 function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
 {
+$loader = $env->getLoader();
 try {
-return $env->getLoader()->getSource($name);
+if (!$loader instanceof Twig_SourceContextLoaderInterface) {
+return $loader->getSource($name);
+} else {
+return $loader->getSourceContext($name)->getCode();
+}
 } catch (Twig_Error_Loader $e) {
 if (!$ignoreMissing) {
 throw $e;
@@ -5200,14 +5167,18 @@ if (true === $defaultStrategy) {
 $defaultStrategy ='html';
 }
 if ('filename'=== $defaultStrategy) {
+@trigger_error('Using "filename" as the default strategy is deprecated since version 1.27. Use "name" instead.', E_USER_DEPRECATED);
+$defaultStrategy ='name';
+}
+if ('name'=== $defaultStrategy) {
 $defaultStrategy = array('Twig_FileExtensionEscapingStrategy','guess');
 }
 $this->defaultStrategy = $defaultStrategy;
 }
-public function getDefaultStrategy($filename)
+public function getDefaultStrategy($name)
 {
 if (!is_string($this->defaultStrategy) && false !== $this->defaultStrategy) {
-return call_user_func($this->defaultStrategy, $filename);
+return call_user_func($this->defaultStrategy, $name);
 }
 return $this->defaultStrategy;
 }
@@ -5297,10 +5268,18 @@ public function __construct(Twig_Environment $env)
 $this->env = $env;
 }
 abstract public function getTemplateName();
-abstract public function getDebugInfo();
+public function getDebugInfo()
+{
+return array();
+}
 public function getSource()
 {
+@trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0. Use getSourceContext() instead.', E_USER_DEPRECATED);
 return'';
+}
+public function getSourceContext()
+{
+return new Twig_Source('', $this->getTemplateName());
 }
 public function getEnvironment()
 {
@@ -5324,7 +5303,7 @@ if (!isset($this->parents[$parent])) {
 $this->parents[$parent] = $this->loadTemplate($parent);
 }
 } catch (Twig_Error_Loader $e) {
-$e->setTemplateFile(null);
+$e->setTemplateName(null);
 $e->guess();
 throw $e;
 }
@@ -5369,8 +5348,8 @@ throw new LogicException('A block must be a method on a Twig_Template instance.'
 try {
 $template->$block($context, $blocks);
 } catch (Twig_Error $e) {
-if (!$e->getTemplateFile()) {
-$e->setTemplateFile($template->getTemplateName());
+if (!$e->getTemplateName()) {
+$e->setTemplateName($template->getTemplateName());
 }
 if (false === $e->getTemplateLine()) {
 $e->setTemplateLine(-1);
@@ -5415,8 +5394,8 @@ return $template;
 }
 return $this->env->loadTemplate($template, $index);
 } catch (Twig_Error $e) {
-if (!$e->getTemplateFile()) {
-$e->setTemplateFile($templateName ? $templateName : $this->getTemplateName());
+if (!$e->getTemplateName()) {
+$e->setTemplateName($templateName ? $templateName : $this->getTemplateName());
 }
 if ($e->getTemplateLine()) {
 throw $e;
@@ -5461,8 +5440,8 @@ protected function displayWithErrorHandling(array $context, array $blocks = arra
 try {
 $this->doDisplay($context, $blocks);
 } catch (Twig_Error $e) {
-if (!$e->getTemplateFile()) {
-$e->setTemplateFile($this->getTemplateName());
+if (!$e->getTemplateName()) {
+$e->setTemplateName($this->getTemplateName());
 }
 if (false === $e->getTemplateLine()) {
 $e->setTemplateLine(-1);

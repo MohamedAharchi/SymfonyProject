@@ -73,13 +73,13 @@
     <parameter key="router.options.matcher_class">Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher</parameter>
     <parameter key="router.options.matcher_base_class">Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher</parameter>
     <parameter key="router.options.matcher_dumper_class">Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper</parameter>
-    <parameter key="router.options.matcher.cache_class">appDevUrlMatcher</parameter>
-    <parameter key="router.options.generator.cache_class">appDevUrlGenerator</parameter>
+    <parameter key="router.options.matcher.cache_class">appDevDebugProjectContainerUrlMatcher</parameter>
+    <parameter key="router.options.generator.cache_class">appDevDebugProjectContainerUrlGenerator</parameter>
     <parameter key="router.request_context.host">localhost</parameter>
     <parameter key="router.request_context.scheme">http</parameter>
     <parameter key="router.request_context.base_url"></parameter>
     <parameter key="router.resource">C:\wamp\www\Symfony\app/config/routing_dev.yml</parameter>
-    <parameter key="router.cache_class_prefix">appDev</parameter>
+    <parameter key="router.cache_class_prefix">appDevDebugProjectContainer</parameter>
     <parameter key="request_listener.http_port">80</parameter>
     <parameter key="request_listener.https_port">443</parameter>
     <parameter key="debug.error_handler.throw_at">-1</parameter>
@@ -189,6 +189,7 @@
     <parameter key="swiftmailer.mailer.default.transport.smtp.auth_mode">null</parameter>
     <parameter key="swiftmailer.mailer.default.transport.smtp.timeout">30</parameter>
     <parameter key="swiftmailer.mailer.default.transport.smtp.source_ip">null</parameter>
+    <parameter key="swiftmailer.mailer.default.transport.smtp.local_domain">null</parameter>
     <parameter key="swiftmailer.spool.default.memory.path">C:\wamp\www\Symfony\var\cache\dev/swiftmailer/spool/default</parameter>
     <parameter key="swiftmailer.mailer.default.spool.enabled">true</parameter>
     <parameter key="swiftmailer.mailer.default.plugin.impersonate">null</parameter>
@@ -456,6 +457,9 @@
     </parameter>
   </parameters>
   <services>
+    <service id="twig.extension.intl" class="Twig_Extensions_Extension_Intl">
+      <tag name="twig.extension"/>
+    </service>
     <service id="controller_name_converter" class="Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser" public="false">
       <tag name="monolog.logger" channel="request"/>
       <argument type="service" id="kernel"/>
@@ -571,7 +575,7 @@
                   <tag name="cache.pool"/>
                   <argument>SEId0ueupg</argument>
                   <argument>0</argument>
-                  <argument>ZGw9PEKbA5OGdx7BY3Cxrg</argument>
+                  <argument>buC4NP0OKLevPl5de8-0WA</argument>
                   <argument>C:\wamp\www\Symfony\var\cache\dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -584,7 +588,7 @@
                   <tag name="cache.pool"/>
                   <argument>fbHmzgigaQ</argument>
                   <argument>0</argument>
-                  <argument>ZGw9PEKbA5OGdx7BY3Cxrg</argument>
+                  <argument>buC4NP0OKLevPl5de8-0WA</argument>
                   <argument>C:\wamp\www\Symfony\var\cache\dev/pools</argument>
                   <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
                   <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -789,6 +793,7 @@
             <argument>C:\wamp\www\Symfony\vendor\symfony\symfony\src\Symfony\Component\Validator/Resources/translations\validators.en.xlf</argument>
             <argument>C:\wamp\www\Symfony\vendor\symfony\symfony\src\Symfony\Component\Form/Resources/translations\validators.en.xlf</argument>
             <argument>C:\wamp\www\Symfony\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.en.xlf</argument>
+            <argument>C:\wamp\www\Symfony\src\OC\PlatformBundle/Resources/translations\messages.en.yml</argument>
             <argument>C:\wamp\www\Symfony\vendor\friendsofsymfony\user-bundle/Resources/translations\FOSUserBundle.en.yml</argument>
             <argument>C:\wamp\www\Symfony\vendor\friendsofsymfony\user-bundle/Resources/translations\validators.en.yml</argument>
           </argument>
@@ -1237,7 +1242,7 @@
       <tag name="cache.pool"/>
       <argument>sJBOXbOooW</argument>
       <argument>0</argument>
-      <argument>ZGw9PEKbA5OGdx7BY3Cxrg</argument>
+      <argument>buC4NP0OKLevPl5de8-0WA</argument>
       <argument>C:\wamp\www\Symfony\var\cache\dev/pools</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -1968,9 +1973,9 @@
       </call>
     </service>
     <service id="debug.controller_resolver" class="Symfony\Component\HttpKernel\Controller\TraceableControllerResolver">
+      <tag name="monolog.logger" channel="request"/>
       <argument type="service">
         <service class="Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver" public="false">
-          <tag name="monolog.logger" channel="request"/>
           <argument type="service" id="service_container"/>
           <argument type="service" id="controller_name_converter"/>
           <argument type="service" id="monolog.logger.request" on-invalid="ignore"/>
@@ -2038,7 +2043,7 @@
         </argument>
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-            <argument>58121b7db05de5.34133895</argument>
+            <argument>58132e88cc4ed2.14107364</argument>
           </service>
         </argument>
       </argument>
@@ -2345,7 +2350,7 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
             <argument type="service" id="security.token_storage"/>
-            <argument>58121b7db05de5.34133895</argument>
+            <argument>58132e88cc4ed2.14107364</argument>
             <argument type="service" id="monolog.logger.security" on-invalid="null"/>
             <argument type="service" id="security.authentication.manager"/>
           </service>
@@ -2415,7 +2420,7 @@
           <argument>bootstrap_3_layout.html.twig</argument>
         </argument>
         <argument key="exception_controller">twig.controller.exception:showAction</argument>
-        <argument key="autoescape">filename</argument>
+        <argument key="autoescape">name</argument>
         <argument key="cache">C:\wamp\www\Symfony\var\cache\dev/twig</argument>
         <argument key="charset">UTF-8</argument>
         <argument key="paths" type="collection"/>
@@ -2430,6 +2435,9 @@
           <argument key="thousands_separator">,</argument>
         </argument>
       </argument>
+      <call method="addExtension">
+        <argument type="service" id="twig.extension.intl"/>
+      </call>
       <call method="addExtension">
         <argument type="service">
           <service class="Symfony\Bridge\Twig\Extension\LogoutUrlExtension" public="false">
@@ -2914,6 +2922,11 @@
         <argument>0</argument>
         <argument>datetime</argument>
       </call>
+      <call method="add">
+        <argument type="service" id="oc_platform.paramconverter.json"/>
+        <argument>0</argument>
+        <argument>null</argument>
+      </call>
     </service>
     <service id="sensio_framework_extra.converter.doctrine.orm" class="Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\DoctrineParamConverter">
       <tag name="request.param_converter" converter="doctrine.orm"/>
@@ -2974,6 +2987,9 @@
       <tag name="kernel.event_listener" event="kernel.response" method="processBeta"/>
       <argument type="service" id="oc_platform.beta.html_adder"/>
       <argument>2017-06-01</argument>
+    </service>
+    <service id="oc_platform.paramconverter.json" class="OC\PlatformBundle\ParamConverter\JsonParamConverter">
+      <tag name="request.param_converter"/>
     </service>
     <service id="stof_doctrine_extensions.uploadable.manager" class="Stof\DoctrineExtensionsBundle\Uploadable\UploadableManager">
       <argument type="service">
@@ -3369,11 +3385,11 @@
         <argument key="generator_class">Symfony\Component\Routing\Generator\UrlGenerator</argument>
         <argument key="generator_base_class">Symfony\Component\Routing\Generator\UrlGenerator</argument>
         <argument key="generator_dumper_class">Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper</argument>
-        <argument key="generator_cache_class">appDevUrlGenerator</argument>
+        <argument key="generator_cache_class">appDevDebugProjectContainerUrlGenerator</argument>
         <argument key="matcher_class">Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher</argument>
         <argument key="matcher_base_class">Symfony\Bundle\FrameworkBundle\Routing\RedirectableUrlMatcher</argument>
         <argument key="matcher_dumper_class">Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper</argument>
-        <argument key="matcher_cache_class">appDevUrlMatcher</argument>
+        <argument key="matcher_cache_class">appDevDebugProjectContainerUrlMatcher</argument>
         <argument key="strict_requirements">true</argument>
       </argument>
       <argument type="service" id="router.request_context" on-invalid="ignore"/>
@@ -3541,6 +3557,12 @@
       <call method="setSourceIp">
         <argument>null</argument>
       </call>
+      <configurator method="configure">
+        <service class="Symfony\Bundle\SwiftmailerBundle\DependencyInjection\SmtpTransportConfigurator" public="false">
+          <argument>null</argument>
+          <argument type="service" id="router.request_context" on-invalid="null"/>
+        </service>
+      </configurator>
     </service>
     <service id="fos_user.mailer" class="FOS\UserBundle\Mailer\Mailer">
       <argument type="service" id="swiftmailer.mailer.default"/>

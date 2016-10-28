@@ -3,6 +3,8 @@
 <html>
   <body>
       <br/>
-    {{ 'Hello'|trans }} {{ name }}!
+    {{ 'hello'|trans({'%name%': name}) }}
+    <!-- localizeddate requiert les extensions ICU et intl -->
+    Aujourd'hui nous sommes le {{ 'now'|localizeddate('full', 'none') }} et il est {{ 'now'|localizeddate('none', 'short') }}
   </body>
 </html>

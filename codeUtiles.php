@@ -602,6 +602,44 @@ public function testAction()
 /* Connaitre tous les services implémentant un certain tag : php bin/console debug:container --tag=twig.extension
 /* Documentation officielle pour la création d'extensions Twig : http://twig.sensiolabs.org/doc/advanced.html#creating-an-extension
 /* Documentation officielle dictionnaire des tags : https://symfony.com/doc/current/reference/dic_tags.html 
-/* Documentation officielle sur la création de type de champ : https://symfony.com/doc/current/form/create_custom_field_type.html
- 
+/* Documentation officielle sur la création de type de champ : https://symfony.com/doc/current/form/create_custom_field_type.html 
 /* Les services par défaut de Symfony les plus utilisés : https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony/les-services-utilisation-poussee-1#r-3624936
+/******* FIN DES SERVICES UTILISATION POUSSEE *****/
+ 
+/**************** LES TRADUCTIONS ****************/
+/* Documentation officielle pour gérer le singulier et pluriel : https://symfony.com/doc/current/translation.html#intervalle-explicite-de-pluralisation
+/* Les différentes syntaxes d'utilisation :
+ * 
+        * Les balises :
+        {# Texte simple #}
+        {% trans with {'%placeholder%': placeholderValue} from 'domaine' into locale %}maChaîne{% endtrans %}
+        {# Texte avec gestion de pluriels #}
+        {% transchoice count with {'%placeholder%': placeholderValue} from 'domaine' into locale %}maChaîne{% endtranschoice %}
+ * 
+ * 
+        Les filtres :
+        {# Texte simple #}
+        {{ 'maChaîne'|trans({'%placeholder%': placeholderValue}, 'domaine', locale) }}
+        {# Texte avec gestion de pluriels #}
+        {{ 'maChaîne'|transchoice (count,  {'%placeholder%': placeholderValue}, 'domaine', locale) }}
+ * 
+ * 
+        Les méthodes du service :
+        <?php
+        $translator = $this->get('translator'); // depuis un contrôleur
+        // Texte simple
+        $translator->trans('maChaîne',  array('%placeholder%' => $placeholderValue) , 'domaine', $locale);
+        // Texte avec gestion de pluriels
+        $translator->transchoice($count, 'maChaîne',  array('%placeholder%' => $placeholderValue) , 'domaine', $locale)
+ */
+/*************** FIN DES TRADUCTIONS ****************/
+
+/************ TWIG ****************/
+/* Les extensions Twig : http://twig.sensiolabs.org/doc/extensions/index.html
+/*********** FIN TWIG ************/
+
+/************* ParamConverter - LES CONVERTISSEURS DE PARAMETRES ***************/
+/* ParamConverterListener : https://github.com/sensiolabs/SensioFrameworkExtraBundle/blob/master/EventListener/ParamConverterListener.php
+/* ParamConverterInterface : https://github.com/sensiolabs/SensioFrameworkExtraBundle/blob/master/Request/ParamConverter/ParamConverterInterface.php
+/* DoctrineParamConverter : https://github.com/sensiolabs/SensioFrameworkExtraBundle/blob/master/Request/ParamConverter/DoctrineParamConverter.php */
+/* DateTimeParamConverter : https://github.com/sensio/SensioFrameworkExtraBundle/blob/master/Request/ParamConverter/DateTimeParamConverter.php */

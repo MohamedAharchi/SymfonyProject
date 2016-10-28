@@ -22,9 +22,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class AdvertController extends Controller
 {
+  /*
+   * @ParamConverter("json")
+   */  
+  public function ParamConverterAction($json)
+  {
+    return new Response(print_r($json, true));
+  }
+  
   public function translationAction($name)
   {
     return $this->render('OCPlatformBundle:Advert:translation.html.twig', array(
@@ -73,18 +82,12 @@ class AdvertController extends Controller
     ));
   }
 
-  public function viewAction($id)
+  /**
+   * @ParamConverter("advert", options={"mapping": {"advert_id": "id"}})
+   */
+  public function viewAction(Advert $advert)
   {
     $em = $this->getDoctrine()->getManager();
-
-    // Pour récupérer une seule annonce, on utilise la méthode find($id)
-    $advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
-
-    // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
-    // ou null si l'id $id n'existe pas, d'où ce if :
-    if (null === $advert) {
-      throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
-    }
 
     // Récupération de la liste des candidatures de l'annonce
     $listApplications = $em
